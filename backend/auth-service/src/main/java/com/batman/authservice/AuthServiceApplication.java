@@ -1,4 +1,4 @@
-package com.batman.auth_service;
+package com.batman.authservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

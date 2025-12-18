@@ -1,4 +1,4 @@
-package com.batman.auth_service;
+package com.batman.authservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
