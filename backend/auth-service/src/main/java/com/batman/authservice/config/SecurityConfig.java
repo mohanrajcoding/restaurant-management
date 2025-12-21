@@ -1,19 +1,34 @@
 package com.batman.authservice.config;
 
+import com.batman.authservice.security.JwtAuthenticationFilter;
+import com.batman.authservice.security.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 
-@Configuration
-public class SecurityConfig { @Bean
+@Component
+@RequiredArgsConstructor
+public class SecurityConfig {
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-    System.out.println("Hi");
     http.csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(sess->sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth-> auth.anyRequest().permitAll());
+            .authorizeHttpRequests(auth-> auth.requestMatchers("/api/user/**").permitAll()
+                    .requestMatchers("/api/admin/**").hasAnyRole  ("ADMIN","OWNER")
+                    .anyRequest().authenticated()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 return http.build();
+}
+@Bean
+public PasswordEncoder passwordEncoder(){
+    return new BCryptPasswordEncoder();
 }
 }

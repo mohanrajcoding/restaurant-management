@@ -15,6 +15,11 @@ spring:
         properties:
           hibernate:
             dialect: org.hibernate.dialect.MySQL8Dialect
+app:
+  jwt:
+    secret: your-very-secret-key-123456789012
+    access-token-validity-seconds: 900       # 15 minutes
+    refresh-token-validity-seconds: 604800
 
   profiles:
     active: dev
